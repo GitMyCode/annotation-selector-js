@@ -8,11 +8,11 @@
             theme: ko.observable()
         }
 
-        this.themeOptions = [{
-            value: "Satisfaction",
-            text: "Satisfaction"
-        },
+        this.themeOptions = [
             {
+                value: "Satisfaction",
+                text: "Satisfaction"
+            }, {
                 value: "RelationShip with manager",
                 text: "RelationShip with manager"
             }];
