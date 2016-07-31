@@ -1,7 +1,40 @@
 
 (function () {
+    merlin = {
 
-    ko.bindingHandlers.annotations = {
+    }
+    ko.bindingHandlers.bindHTML = {
+        init: function () {
+            return { controlsDescendantBindings: true };
+        },
+        update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+            var value = ko.utils.unwrapObservable(valueAccessor());
+            ko.applyBindingsToNode(element, { html: value });
+            ko.applyBindingsToDescendants(bindingContext, element);
+        }
+    };
+
+    ko.bindingHandlers.hintAnnotation = {
+        init: function (element, valueAccessor, allBindingsAccessor) {
+            var value = ko.utils.unwrapObservable(valueAccessor());
+            var jqueryElement = $(element);
+            var allBindings = allBindingsAccessor();
+            var options = {
+                trigger: 'hover',
+            };
+
+            ko.utils.extend(options, allBindings);
+            ko.utils.extend(options, value);
+
+            jqueryElement.tooltip(options);
+
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                jqueryElement.tooltip("destroy");
+            });
+        },
+    };
+
+    ko.bindingHandlers.annotationSelector = {
         init: function (element, valueAccessor, allBindingsAccessor) {
             $(element).bind("mouseup", textSelected);
             var annotations = valueAccessor();
@@ -10,71 +43,46 @@
                 console.log("selection detected");
                 var selection = (document.all) ? document.selection.createRange().text : document.getSelection();
                 if (!selection.isCollapsed) {
-
+                    cleanNode();
                     console.log(selection);
-                    var selectionRange = selection.getRangeAt(0);
+                    var addAnnotationComponentTemplate = document.getElementById("add-annotation-component-template")
 
-                    annotations.push({
+                    $("#add-annotations-container").append(addAnnotationComponentTemplate.innerHTML);
+
+                    var selectionRange = selection.getRangeAt(0);
+                    var selectionData = {
                         text: selection.toString(),
                         start: selectionRange.startOffset,
                         end: selectionRange.endOffset,
                         commentElement: selection.getRangeAt(0).startContainer.parentNode
-                    });
+                    }
+
+                    ko.applyBindings(new merlin.AddAnnotationComponent(annotations, selectionData, cleanNode), $("#add-annotations-container")[0]);
                 }
+            }
+
+            function cleanNode() {
+                ko.cleanNode($("#add-annotations-container")[0]);
+                $("#add-annotations-container").html("");
             }
         }
     }
 
-    var ViewModel = function () {
+    merlin.app = function () {
         var that = this;
-        this.annotations = ko.observableArray();
+        this.feedbacks = ko.observableArray();
 
-        $("#comment-id").bind("mouseup", that.highlightSelection);
+        this.feedbacks.push({
+            content: ' In software, a stack overflow occurs when too much memory is used on the call stack. The call stack contains a limite',
+            annotations: ko.observableArray()
+        });
+
+        // $("#comment-id").bind("mouseup", that.highlightSelection);
 
     }
-    ViewModel.prototype = {
+    merlin.app.prototype = {
 
-        showAnnotations: function () {
-            var that = this;
-            var newNode = document.createElement("div");
-            newNode.innerHTML = document.getElementById("comment-id").innerHTML;
-            var highlightAnnotations = [];
-            $.each(that.annotations.peek(), function (i, val) {
-                var range = document.createRange();
-                var textNode = newNode.childNodes[0];
-                range.setStart(textNode, val.start);
-                range.setEnd(textNode, val.end);
-
-                highlightAnnotations.push(range);
-            });
-
-            $.each(highlightAnnotations, function (i, val) {
-                that.highlightRange(val);
-            });
-
-            that.hideAnnotations();
-            document.getElementById("annotations-container").appendChild(newNode);
-
-        },
-        clearAnnotations: function () {
-            annotations = [];
-        },
-
-        hideAnnotations: function () {
-            document.getElementById("annotations-container").innerHTML = "";
-        },
-
-        highlightRange: function (range) {
-            var newNode = document.createElement("div");
-            newNode.setAttribute(
-                "style",
-                "background-color: yellow; display: inline;"
-            );
-            range.surroundContents(newNode);
-        }
     }
-
-    ko.applyBindings(new ViewModel());
 })();
 
 // document.onmouseup = highlightSelection
