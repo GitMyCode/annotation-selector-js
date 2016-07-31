@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>NOM du SITE</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="Content/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+
+
+</head>
+
+<body>
+
+    <div id="TEST">
+        on’t pay attention to the world of modern board games, you’ve almost certainly never heard of Scythe. If you’re a diehard
+        cardboard fan, though, it’s all you’ve been hearing about
+
+    </div>
+    <div class="comments-container">
+        <div type="text" id="comment-id" class="comments" data-bind="annotations: annotations">
+            In software, a stack overflow occurs when too much memory is used on the call stack. The call stack contains a limited amount
+            of memory, often determined at the start of the program. The size of the call stack depends on many factors,
+            including the programming language, machine architecture, multi-threading, and amount of available memory. When
+            too much memory is used on the call stack the stack is said to overflow, typically resulting in a program crash.[1]
+            This class of software bug is usually caused by one of two types of programming errors.[2
+        </div>
+    </div>
+    <br>
+    <a href="#" id="username" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">superuser</a>
+    <br>
+    <div id="annotations-container">
+
+    </div>
+
+    <div id="add-annotations-container">
+        <input type="text" id="add-annotation-input" />
+    </div>
+
+    <button type="button" data-bind="click: showAnnotations.bind($root)">Show annotations</button>
+    <button type="button" data-bind="click: hideAnnotations()">Hide annotations</button>
+    <button type="button" data-bind="click: clearAnnotations()">Clear annotations</button>
+
+</body>
+
+<script src="Content/knockout/knockout-3.2.0.js"></script>
+<script src="Content/jquery/jquery.min.js"></script>
+<script src="Content/app/index.js"></script>
+
+</html>
