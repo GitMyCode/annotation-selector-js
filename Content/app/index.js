@@ -23,8 +23,13 @@
                 trigger: 'hover',
             };
 
+   
+
             ko.utils.extend(options, allBindings);
-            ko.utils.extend(options, value);
+            ko.utils.extend(options, {
+                title: JSON.stringify(value),
+                placement: 'right'
+            });
 
             jqueryElement.tooltip(options);
 

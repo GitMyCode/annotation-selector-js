@@ -48,7 +48,7 @@
                 "style",
                 "background-color: yellow; display: inline;"
             );
-            newNode.setAttribute("data-bind", "hintAnnotation: { title: '" + annotationDto.annotation.classificationData.theme.peek() + "' , placement: 'right' }");
+            newNode.setAttribute("data-bind", "hintAnnotation: " + ko.toJSON(annotationDto.annotation.classificationData) + "");
             annotationDto.range.surroundContents(newNode);
         }
     }
