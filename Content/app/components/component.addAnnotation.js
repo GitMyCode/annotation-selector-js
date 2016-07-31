@@ -3,25 +3,36 @@
         this.selectionData = selectionData;
         this.annotations = annotations;
         this.callback = callback;
+        this.classificationData = {
+            comment: ko.observable(),
+            theme: ko.observable()
+        }
 
-        this.comment = ko.observable();
+        this.themeOptions = [{
+            value: "Satisfaction",
+            text: "Satisfaction"
+        },
+            {
+                value: "RelationShip with manager",
+                text: "RelationShip with manager"
+            }];
     }
 
     merlin.AddAnnotationComponent.prototype = {
         save: function () {
             this.annotations.push({
                 selectionData: this.selectionData,
-                comment: this.comment.peek()
+                classificationData: this.classificationData
             });
 
             this._close();
         },
 
-        cancel: function(){
+        cancel: function () {
             this._close();
         },
 
-        _close: function(){
+        _close: function () {
             this.callback();
         }
     }

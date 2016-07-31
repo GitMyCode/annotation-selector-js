@@ -34,7 +34,7 @@
         },
 
         clearAnnotations: function () {
-            annotations = [];
+            this.feedback.annotations([]);
         },
 
         hideAnnotations: function () {
@@ -48,7 +48,7 @@
                 "style",
                 "background-color: yellow; display: inline;"
             );
-            newNode.setAttribute("data-bind", "hintAnnotation: { title: '" + annotationDto.annotation.comment + "' , placement: 'right' }");
+            newNode.setAttribute("data-bind", "hintAnnotation: { title: '" + annotationDto.annotation.classificationData.theme.peek() + "' , placement: 'right' }");
             annotationDto.range.surroundContents(newNode);
         }
     }

@@ -16,20 +16,39 @@
 
     <script type="text/html" id="feedback-component-template">
         <div class="feedback">
-            <div type="text" class="feedback-content" data-bind="visible: !showAnnotation(), annotationSelector: feedback.annotations, text: feedback.content"></div>
+            <div  type="text" class="feedback-content" data-bind="visible: !showAnnotation(), annotationSelector: feedback.annotations, text: feedback.content"></div>
             <div id="annotations-container" data-bind="visible: showAnnotation(), bindHTML: showAnnotationContent"></div>
             <div id="add-annotations-container"></div>
             <div class="feedback-controls">
-                <button type="button" data-bind="click: showAnnotations">Show annotations</button>
-                <button type="button" data-bind="click: hideAnnotations">Hide annotations</button>
-                <button type="button" data-bind="click: clearAnnotations">Clear annotations</button>
+                <button class="btn btn-primary" type="button" data-bind="click: showAnnotations">Show annotations</button>
+                <button class="btn btn-primary" type="button" data-bind="click: hideAnnotations">Hide annotations</button>
+                <button class="btn btn-primary" type="button" data-bind="click: clearAnnotations">Clear annotations</button>
             </div>
         </div>
     </script>
     <script type="text/html" id="add-annotation-component-template">
-        <input type="text" id="add-annotation-input" data-bind="textInput: comment" />
-        <button type="button" data-bind="click: save">Save</button>
+        <div class="add-annotation">
+            <form class="container">
+                <div class="form-group col-md-6">
+                    <label></label>
+                    <select-component params="selected: classificationData.theme, optionValues: themeOptions"></select-component>
+                 </div>
+                <button class="btn btn-primary " type="button" data-bind="click: save">Save</button>
+            </form>
+        </div>
     </script>
+    <script type="text/html" id="select-component-template">
+        <input type="hidden" data-bind="value: selected"/>
+        <select class="form-control editable-select" data-bind="
+                    options: optionValues,
+                    value: selected,
+                    optionsCaption: optionsCaption,
+                    valueAllowUnset: valueAllowUnset,
+                    optionsText: optionsText,
+                    optionsValue: optionsValue">
+        </select>
+    </script>
+
 
     <script src="Content/knockout/knockout-3.2.0.js"></script>
     <script src="Content/jquery/jquery.min.js"></script>
@@ -37,7 +56,7 @@
     <script src="Content/app/index.js"></script>
     <script src="Content/app/components/component.addAnnotation.js"></script>
     <script src="Content/app/components/component.feedback.js"></script>
-
+    <script src="Content/app/components/component.select.js"></script>
 
     <script>
         $(document).ready(function(){
