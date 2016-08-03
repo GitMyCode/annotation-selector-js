@@ -1,0 +1,19 @@
+{
+  "name": "electron-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "pretty-bytes": "^2.0.1"
+  },
+  "devDependencies": {
+    "electron-packager": "^7.4.0",
+    "electron-prebuilt": "^0.35.2"
+  },
+  "scripts": {
+    "start": "electron main.js",
+    "package": "electron-packager . WinApp --platform=win32 --arch=x64"
+  },
+  "author": "",
+  "license": "ISC"
+}

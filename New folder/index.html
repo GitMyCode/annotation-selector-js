@@ -1,26 +1,17 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 
 <head>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Tutorialzine Electron Experiment</title>
-
+    <title>NOM du SITE</title>
+    <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="Content/bootstrap-3.3.7-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/jquery.flipster.min.css">
-    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" type="text/css" href="Content/bootstrap-3.3.7-dist/css/bootstrap.min.css">
 
 </head>
 
-<body class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="feedback-container" data-bind="foreach: $root.feedbacks">
-                <feedback params="feedback: $data"></feedback>
-            </div>
-        </div>
+<body>
+    <div class="feedback-container" data-bind="foreach: $root.feedbacks">
+        <feedback params="feedback: $data"></feedback>
     </div>
 
     <script type="text/html" id="feedback-component-template">
