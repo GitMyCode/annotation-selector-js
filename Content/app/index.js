@@ -2,10 +2,10 @@
 
 (function () {
     require("./index.css")
-
+    
     merlin = {
     }
-    console.log("sdfsdf")
+    
     merlin.app = function () {
         var that = this;
         this.feedbacks = ko.observableArray();

@@ -9,7 +9,6 @@
     <title>Tutorialzine Electron Experiment</title>
 
     <link rel="stylesheet" type="text/css" href="Content/bootstrap-3.3.7-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/jquery.flipster.min.css">
     <link rel="stylesheet" href="./css/styles.css">
 </head>
 
@@ -21,19 +20,9 @@
             </div>
         </div>
     </div>
-sdfsd
-    <script type="text/html" id="feedback-component-template">
-        <div class="feedback">
-            <div  type="text" class="feedback-content" data-bind="visible: !showAnnotation(), annotationSelector: feedback.annotations, text: feedback.content"></div>
-            <div id="annotations-container" data-bind="visible: showAnnotation(), bindHTML: showAnnotationContent"></div>
-            <div id="add-annotations-container"></div>
-            <div class="feedback-controls">
-                <button class="btn btn-primary" type="button" data-bind="click: showAnnotations">Show annotations</button>
-                <button class="btn btn-primary" type="button" data-bind="click: hideAnnotations">Hide annotations</button>
-                <button class="btn btn-primary" type="button" data-bind="click: clearAnnotations">Clear annotations</button>
-            </div>
-        </div>
-    </script>
+
+
+    
     <script type="text/html" id="add-annotation-component-template">
         <div class="add-annotation">
             <form class="container">
@@ -41,7 +30,12 @@ sdfsd
                     <label></label>
                     <select-component params="selected: classificationData.theme, optionValues: themeOptions"></select-component>
                  </div>
-                <button class="btn btn-primary " type="button" data-bind="click: save">Save</button>
+                <div class="feedback-controls">
+                    <button class="btn btn-primary " type="button" data-bind="click: save">Save</button>
+                    <button class="btn btn-primary" type="button" data-bind="click: cancel">cancel</button>
+                    <!--<button class="btn btn-primary" type="button" data-bind="click: hideAnnotations">Hide annotations</button>
+                    <button class="btn btn-primary" type="button" data-bind="click: clearAnnotations">Clear annotations</button>-->
+                 </div>
             </form>
         </div>
     </script>
@@ -57,16 +51,23 @@ sdfsd
         </select>
     </script>
 
+    <script type="text/html" id="feedback-component-template">
+        <div class="feedback">
+            <div  type="text" class="feedback-content" data-bind="visible: !showAnnotation(), annotationSelector: feedback.annotations, text: feedback.content"></div>
+            <div id="annotations-container" data-bind="visible: showAnnotation(), bindHTML: showAnnotationContent, annotationSelector: feedback.annotations,"></div>
+            <div id="add-annotations-container"></div>
+        </div>
+    </script>
+
     <script src="Content/knockout/knockout-3.2.0.js"></script>
     <script src="Content/jquery/jquery.min.js"></script>
     <script src="Content/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
     <script src="dist/bundle.js"></script>
 
     <script>
-        $(document).ready(function(){
-              ko.applyBindings(new merlin.app());
-        })
-
+        // $(document).ready(function(){
+        //       ko.applyBindings(new merlin.app());
+        // })
     </script>
 <script type="text/javascript" src="bundle.js"></script></body>
 
