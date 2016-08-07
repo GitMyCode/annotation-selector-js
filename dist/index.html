@@ -25,7 +25,7 @@
     
     <script type="text/html" id="add-annotation-component-template">
         <div class="add-annotation">
-            <form class="container">
+            <form>
                 <div class="form-group col-md-6">
                     <label></label>
                     <select-component params="selected: classificationData.theme, optionValues: themeOptions"></select-component>
@@ -53,21 +53,21 @@
 
     <script type="text/html" id="feedback-component-template">
         <div class="feedback">
-            <div  type="text" class="feedback-content" data-bind="visible: !showAnnotation(), annotationSelector: feedback.annotations, text: feedback.content"></div>
-            <div id="annotations-container" data-bind="visible: showAnnotation(), bindHTML: showAnnotationContent, annotationSelector: feedback.annotations,"></div>
-            <div id="add-annotations-container"></div>
+            <!--<div  type="text" class="feedback-content" data-bind="visible: !showAnnotation(), annotationSelector: feedback.annotations, text: feedback.content"></div>-->
+            <div id="annotations-container" data-bind="visible: showAnnotation(), bindHTML: showAnnotationContent, annotationSelector: feedback"></div>
+            <div class="add-annotations-container"></div>
         </div>
     </script>
 
     <script src="Content/knockout/knockout-3.2.0.js"></script>
     <script src="Content/jquery/jquery.min.js"></script>
     <script src="Content/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-    <script src="dist/bundle.js"></script>
+    <!--<script src="dist/bundle.js"></script>-->
 
     <script>
-        // $(document).ready(function(){
-        //       ko.applyBindings(new merlin.app());
-        // })
+        $(document).ready(function(){
+              ko.applyBindings(new merlin.app());
+        })
     </script>
 <script type="text/javascript" src="bundle.js"></script></body>
 

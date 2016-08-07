@@ -2,11 +2,10 @@
 
     ko.bindingHandlers.annotationSelector = {
         init: function (element, valueAccessor, allBindingsAccessor) {
-            this.feedback = valueAccessor();
-            this.elem = element;
-
-            $(this.elem).bind("mouseup", textSelected.bind(this));
-            $(this.elem).bind("mousedown", clean.bind(this));
+            valueAccessor();
+            var that = this;
+            $(element).bind("mouseup", textSelected);
+            $(element).bind("mousedown", clean);
 
             function textSelected() {
                 console.log("selection detected");
@@ -14,11 +13,11 @@
                 var selection = (document.all) ? document.selection.createRange().text : document.getSelection();
 
                 if (!selection.isCollapsed) {
-                    cleanNode(this.elem);
+                    cleanNode(element);
                     console.log(selection);
                     var addAnnotationComponentTemplate = document.getElementById("add-annotation-component-template")
 
-                    $(this.elem).siblings(".add-annotations-container").append(addAnnotationComponentTemplate.innerHTML);
+                    $(element).siblings(".add-annotations-container").append(addAnnotationComponentTemplate.innerHTML);
 
                     var selectionRange = selection.getRangeAt(0);
                     var selectionData = {
@@ -28,30 +27,22 @@
                         commentElement: selection.getRangeAt(0).startContainer.parentNode
                     }
 
-                    ko.applyBindings(new merlin.AddAnnotationComponent(this.feedback.annotations, selectionData, cleanNode.bind(this)), $(this.elem).siblings(".add-annotations-container")[0]);
+                    ko.applyBindings(new merlin.AddAnnotationComponent( valueAccessor().annotations, selectionData, cleanNode.bind(that)), $(element).siblings(".add-annotations-container")[0]);
                 }
             }
 
-            function clean() {
+            function clean(e) {
                 console.log("cleanup before selection");
-                var text = this.feedback.content;
-                $(this.elem).html(text)
+                if (e.target.className != "annotation") {
+                    var text = valueAccessor().content;
+                    $(element).html(text)
 
-            }
-
-            function getSelectionText() {
-                var text = ""
-                if (window.getSelection) {
-                    text = window.getSelection();//.toString();
-                } else if (document.selection && document.selection.type == "Text") {
-                    text = document.selection.createRange().text;
                 }
-                return text;
             }
 
             function cleanNode() {
-                ko.cleanNode($(this.elem).siblings(".add-annotations-container")[0]);
-                $(this.elem).siblings(".add-annotations-container").html("");
+                ko.cleanNode($(element).siblings(".add-annotations-container")[0]);
+                $(element).siblings(".add-annotations-container").html("");
             }
         }
     }

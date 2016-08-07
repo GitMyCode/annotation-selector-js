@@ -50,7 +50,8 @@
 	__webpack_require__(8);
 	__webpack_require__(9);
 	__webpack_require__(10);
-	module.exports = __webpack_require__(11);
+	__webpack_require__(11);
+	module.exports = __webpack_require__(12);
 
 
 /***/ },
@@ -119,7 +120,7 @@
 
 
 	// module
-	exports.push([module.id, ".hide{\r\n    display: none;\r\n}\r\n.show{\r\n    display: block;\r\n}\r\n\r\nbody{\r\n    background-color: white;\r\n}", ""]);
+	exports.push([module.id, ".hide{\r\n    display: none;\r\n}\r\n.show{\r\n    display: block;\r\n}\r\n\r\nbody{\r\n    background-color: white;\r\n}\r\n.feedback-container{\r\n    margin: 100px 0 100px 0;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n}", ""]);
 
 	// exports
 
@@ -440,18 +441,23 @@
 
 	    ko.bindingHandlers.annotationSelector = {
 	        init: function (element, valueAccessor, allBindingsAccessor) {
-	            $(element).bind("mouseup", textSelected);
-	            var annotations = valueAccessor();
+	            this.feedback = valueAccessor();
+	            this.elem = element;
+
+	            $(this.elem).bind("mouseup", textSelected.bind(this));
+	            $(this.elem).bind("mousedown", clean.bind(this));
 
 	            function textSelected() {
 	                console.log("selection detected");
+
 	                var selection = (document.all) ? document.selection.createRange().text : document.getSelection();
+
 	                if (!selection.isCollapsed) {
-	                    cleanNode();
+	                    cleanNode(this.elem);
 	                    console.log(selection);
 	                    var addAnnotationComponentTemplate = document.getElementById("add-annotation-component-template")
 
-	                    $("#add-annotations-container").append(addAnnotationComponentTemplate.innerHTML);
+	                    $(this.elem).siblings(".add-annotations-container").append(addAnnotationComponentTemplate.innerHTML);
 
 	                    var selectionRange = selection.getRangeAt(0);
 	                    var selectionData = {
@@ -461,13 +467,32 @@
 	                        commentElement: selection.getRangeAt(0).startContainer.parentNode
 	                    }
 
-	                    ko.applyBindings(new merlin.AddAnnotationComponent(annotations, selectionData, cleanNode), $("#add-annotations-container")[0]);
+	                    ko.applyBindings(new merlin.AddAnnotationComponent(this.feedback.annotations, selectionData, cleanNode.bind(this)), $(this.elem).siblings(".add-annotations-container")[0]);
 	                }
 	            }
 
+	            function clean(e) {
+	                console.log("cleanup before selection");
+	                if (e.target.className != "annotation") {
+	                    var text = this.feedback.content;
+	                    $(this.elem).html(text)
+
+	                }
+	            }
+
+	            function getSelectionText() {
+	                var text = ""
+	                if (window.getSelection) {
+	                    text = window.getSelection();//.toString();
+	                } else if (document.selection && document.selection.type == "Text") {
+	                    text = document.selection.createRange().text;
+	                }
+	                return text;
+	            }
+
 	            function cleanNode() {
-	                ko.cleanNode($("#add-annotations-container")[0]);
-	                $("#add-annotations-container").html("");
+	                ko.cleanNode($(this.elem).siblings(".add-annotations-container")[0]);
+	                $(this.elem).siblings(".add-annotations-container").html("");
 	            }
 	        }
 	    }
@@ -546,10 +571,10 @@
 
 	    merlin.AddAnnotationComponent.prototype = {
 	        save: function () {
-	            this.annotations.push({
+	            this.annotations.push(ko.observable({
 	                selectionData: this.selectionData,
 	                classificationData: this.classificationData
-	            });
+	            }));
 
 	            this._close();
 	        },
@@ -568,10 +593,60 @@
 /* 10 */
 /***/ function(module, exports) {
 
+	(function () {
+	    merlin.EditAnnotationComponent = function (annotations, annotation,  callback) {
+	        this.annotations = annotations;
+	        this.annotation = annotation;
+	        this.callback = callback;
+	        this.classificationData = {
+	            comment: ko.observable(),
+	            theme: ko.observable()
+	        }
+
+	        this.themeOptions = [
+	            {
+	                value: "Satisfaction",
+	                text: "Satisfaction"
+	            }, {
+	                value: "RelationShip with manager",
+	                text: "RelationShip with manager"
+	            }];
+	    }
+
+	    merlin.EditAnnotationComponent.prototype = {
+	        save: function () {
+	            this.annotation({
+	                selectionData: this.selectionData,
+	                classificationData: this.classificationData
+	            })
+
+	            this._close();
+	        },
+
+	        cancel: function () {
+	            this._close();
+	        },
+
+	        _close: function () {
+	            this.callback();
+	        }
+	    }
+	})();
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
 	var FeedbackComponent = function (params) {
+	    var that = this;
 	    this.feedback = params.feedback;
 	    this.showAnnotationContent = ko.observable();
 	    this.showAnnotation = ko.observable(true);
+	    that.showAnnotations();
+	    this.feedback.annotations.subscribe(function (change) {
+	        console.log("changed!");
+	        that.showAnnotations();
+	    })
 	}
 
 	FeedbackComponent.prototype = {
@@ -585,8 +660,8 @@
 	        $.each(this.feedback.annotations.peek(), function (i, annotation) {
 	            var range = document.createRange();
 	            var textNode = newNode.childNodes[0];
-	            range.setStart(textNode, annotation.selectionData.start);
-	            range.setEnd(textNode, annotation.selectionData.end);
+	            range.setStart(textNode, annotation.peek().selectionData.start);
+	            range.setEnd(textNode, annotation.peek().selectionData.end);
 
 	            highlightAnnotations.push({
 	                annotation: annotation,
@@ -596,10 +671,27 @@
 	        });
 
 	        $.each(highlightAnnotations, function (i, val) {
-	            that.highlightRange(val);
+	            that.highlightRange(val, i);
 	        });
 
 	        this.showAnnotationContent(newNode.innerHTML);
+	    },
+
+	    editAnnotation: function (annotationIndex, component, evt) {
+	        console.log("edit annotation");
+
+	        var addAnnocationContainerElem = $(evt.target).closest("#annotations-container").siblings(".add-annotations-container");
+	        var addAnnotationComponentTemplate = document.getElementById("add-annotation-component-template")
+	        addAnnocationContainerElem.append(addAnnotationComponentTemplate.innerHTML);
+
+	        var annotation = component.feedback.annotations[annotationIndex];
+
+	        function cleanNode() {
+	            ko.cleanNode(addAnnocationContainerElem);
+	            addAnnocationContainerElem.html("");
+	        }
+
+	        ko.applyBindings(new merlin.EditAnnotationComponent(component.feedback.annotations, annotation, cleanNode.bind(this)), addAnnocationContainerElem[0]);
 	    },
 
 	    clearAnnotations: function () {
@@ -611,13 +703,14 @@
 	        this.showAnnotationContent("");
 	    },
 
-	    highlightRange: function (annotationDto) {
+	    highlightRange: function (annotationDto, index) {
 	        var newNode = document.createElement("div");
+	        newNode.className = "annotation"
 	        newNode.setAttribute(
 	            "style",
 	            "background-color: yellow; display: inline;"
 	        );
-	        newNode.setAttribute("data-bind", "hintAnnotation: " + ko.toJSON(annotationDto.annotation.classificationData) + "");
+	        newNode.setAttribute("data-bind", "hintAnnotation: " + ko.toJSON(annotationDto.annotation.peek().classificationData) + ", click: editAnnotation.bind(this, " + index + "), clickBubble: false");
 	        annotationDto.range.surroundContents(newNode);
 	    }
 	}
@@ -630,7 +723,7 @@
 	});
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	(function () {

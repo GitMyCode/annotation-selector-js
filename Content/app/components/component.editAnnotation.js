@@ -1,12 +1,9 @@
 (function () {
-    merlin.AddAnnotationComponent = function (annotations, selectionData, callback) {
-        this.selectionData = selectionData;
+    merlin.EditAnnotationComponent = function (annotations, annotation,  callback) {
         this.annotations = annotations;
+        this.annotation = annotation;
         this.callback = callback;
-        this.classificationData = {
-            comment: ko.observable(),
-            theme: ko.observable()
-        }
+        this.classificationData = annotation.peek().classificationData
 
         this.themeOptions = [
             {
@@ -18,12 +15,12 @@
             }];
     }
 
-    merlin.AddAnnotationComponent.prototype = {
+    merlin.EditAnnotationComponent.prototype = {
         save: function () {
-            this.annotations.push(ko.observable({
+            this.annotation({
                 selectionData: this.selectionData,
                 classificationData: this.classificationData
-            }));
+            })
 
             this._close();
         },

@@ -14,15 +14,15 @@
 
 <body class="container">
     <div class="row">
-        <div class="col-md-12">
-            <div class="feedback-container" data-bind="foreach: $root.feedbacks">
-                <feedback params="feedback: $data"></feedback>
+        <div class="feedback-container" data-bind="foreach: feedbacks()">
+            <div class="row">
+                <feedback class="col-md-12" params="feedback: $data"></feedback>
             </div>
         </div>
     </div>
 
 
-    
+
     <script type="text/html" id="add-annotation-component-template">
         <div class="add-annotation">
             <form>
@@ -54,7 +54,7 @@
     <script type="text/html" id="feedback-component-template">
         <div class="feedback">
             <!--<div  type="text" class="feedback-content" data-bind="visible: !showAnnotation(), annotationSelector: feedback.annotations, text: feedback.content"></div>-->
-            <div id="annotations-container" data-bind="visible: showAnnotation(), bindHTML: showAnnotationContent, annotationSelector: feedback"></div>
+            <div class="annotation-container" data-bind="visible: showAnnotation(), bindHTML: showAnnotationContent, annotationSelector: feedback"></div>
             <div class="add-annotations-container"></div>
         </div>
     </script>

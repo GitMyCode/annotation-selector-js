@@ -10,6 +10,7 @@ module.exports = {
         "./Content/app/bindings/binding.bindHtml.js",
         "./Content/app/bindings/binding.hintAnnotation.js",
         "./Content/app/components/component.addAnnotation.js",
+        "./Content/app/components/component.editAnnotation.js",
         "./Content/app/components/component.feedback.js",
         "./Content/app/components/component.select.js",
     ],
