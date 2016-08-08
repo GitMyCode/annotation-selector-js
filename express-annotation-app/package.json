@@ -1,0 +1,27 @@
+{
+  "name": "express-annotation-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "wwww.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.1",
+    "express": "^4.14.0"
+  },
+  "devDependencies": {
+    "css-loader": "^0.23.1",
+    "html-loader": "^0.4.3",
+    "html-webpack-plugin": "^2.22.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "scripts": {
+    "start": "node www.js",
+    "dev": "webpack-dev-server --config webpack.config.js --inline --hot --watch --colors --devtool source-map",
+    "watch": "webpack --progress --colors --watch"
+  },
+  "author": "",
+  "license": "ISC"
+}
